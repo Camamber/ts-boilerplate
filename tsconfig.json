@@ -22,6 +22,12 @@
       ],
       "@providers/*": [
         "src/providers/*"
+      ],
+      "@services/*": [
+        "src/services/*"
+      ],
+      "@config/*": [
+        "src/config/*"
       ]
     }
   }
