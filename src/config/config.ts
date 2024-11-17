@@ -10,7 +10,7 @@ const envConfigs: Partial<Record<Environment, Partial<ConfigType>>> = {
 	staging: stagingConfig
 };
 
-function deepMergeWithSpread(obj1, obj2) {
+function deepMergeWithSpread(obj1: any, obj2: any) {
 	const result = { ...obj1 };
 
 	for (const key in obj2) {

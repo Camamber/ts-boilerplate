@@ -1,9 +1,8 @@
 import 'reflect-metadata';
-import { plainToInstance, Type } from 'class-transformer';
-import { IsDefined, IsEnum, ValidateNested, validateSync } from 'class-validator';
+import { z } from 'zod';
 import { config } from 'dotenv';
-import AppsConfig from './apps';
-import DatabaseConfig from './db';
+import appsConfig from './apps';
+import databaseConfig from './db';
 
 enum Environment {
 	development = 'development',
@@ -12,20 +11,11 @@ enum Environment {
 	testing = 'testing'
 }
 
-class Config {
-	@IsEnum(Environment)
-	NODE_ENV: Environment = Environment.development;
-
-	@IsDefined()
-	@ValidateNested()
-	@Type(() => AppsConfig)
-	APPS!: AppsConfig;
-
-	@IsDefined()
-	@ValidateNested()
-	@Type(() => DatabaseConfig)
-	DB!: DatabaseConfig;
-}
+const configValidation = z.object({
+	NODE_ENV: z.nativeEnum(Environment).default(Environment.development),
+	APPS: appsConfig,
+	DB: databaseConfig
+});
 
 function deepMergeWithSpread(obj1: any, obj2: any) {
 	const result = { ...obj1 };
@@ -55,13 +45,8 @@ function validate(config: Record<string, unknown>) {
 			),
 		{}
 	);
-	const validatedConfig = plainToInstance(Config, nestedConfig, { enableImplicitConversion: true });
-	const errors = validateSync(validatedConfig, { skipMissingProperties: false });
 
-	if (errors.length > 0) {
-		throw new Error(errors.toString());
-	}
-	return validatedConfig;
+	return configValidation.parse(nestedConfig);
 }
 
 const env = process.env.NODE_ENV || 'development';

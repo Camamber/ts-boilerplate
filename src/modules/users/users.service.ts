@@ -1,6 +1,9 @@
+import { z } from 'zod';
 import usersDal from './users.dal';
 
-export default {
+const service = {
 	list: usersDal.list,
-	getById: usersDal.getById
+	getById: (id: any) => usersDal.getById(z.coerce.number().parse(id))
 };
+
+export default service;

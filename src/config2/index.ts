@@ -3,8 +3,6 @@ import { plainToInstance } from 'class-transformer';
 import { IsEnum, IsNotEmpty, IsNumberString, IsString, validateSync } from 'class-validator';
 import { config } from 'dotenv';
 
-// type Environment = 'development' | 'production' | 'staging' | 'testing';
-
 enum Environment {
 	development = 'development',
 	production = 'production',
@@ -18,15 +16,15 @@ class Config {
 
 	@IsNotEmpty()
 	@IsString()
-	DB__URL: string;
+	DB__URL!: string;
 
 	@IsNotEmpty()
 	@IsNumberString()
-	APPS__API__PORT: number;
+	APPS__API__PORT!: number;
 
 	@IsNotEmpty()
 	@IsNumberString()
-	APPS__ADMIN__PORT: number;
+	APPS__ADMIN__PORT!: number;
 }
 
 function validate(config: Record<string, unknown>) {

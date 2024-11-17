@@ -1,10 +1,14 @@
-import db from 'src/providers/db';
+import { eq } from 'drizzle-orm';
+
+import db from '@providers/db';
+
+import { usersTable } from './users.schema';
 
 export default {
 	list: async () => {
-		return db.select().from('') ('users').select('*');
+		return db.query.usersTable.findMany({ offset: 0 });
 	},
-	getById: async (id: string) => {
-		return db('users').where('id', id).select('*').first();
+	getById: async (id: number) => {
+		return db.query.usersTable.findFirst({ where: eq(usersTable.id, id) });
 	}
 };
